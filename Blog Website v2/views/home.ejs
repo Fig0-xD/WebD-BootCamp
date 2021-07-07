@@ -1,0 +1,19 @@
+<%- include("partials/header") -%>
+
+<h1>Home</h1>
+<p><%= content %></p>
+
+<form action="/compose" method="get">
+    <button class="btn btn-default btn-lg" type="submit" name="button">Compose a Post</button>
+</form>
+
+<% posts.forEach((post)=>{ %>
+    <h3><a href="/posts/<%= post._id %>"><%= post.title %></a></h3>
+    <% if(post.body.length > 100){ %>
+        <p><%= post.body.substring(0, 100) + " ..."; %> <a href="/posts/<%= post._id %>">Read More</a></p>
+    <% }else{ %>
+        <p><%= post.body; %></p>
+    <% } %>
+<% }); %>
+
+<%- include("partials/footer") -%>
