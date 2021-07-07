@@ -1,0 +1,78 @@
+let buttonColors = ["red", "blue", "green", "yellow"];
+let gamePattern = [];
+let userClickedPattern = [];
+let gameLevel = 0;
+
+function playSound(color) {
+    let audio = new Audio("sounds/" + color + ".mp3");
+    audio.play();
+}
+
+function nextSequence() {
+    gameLevel++;
+    $("#level-title").text("Level " + gameLevel);
+
+    userClickedPattern = [];
+
+    let randomNumber = Math.floor(Math.random() * 4);
+
+    let randomColor = buttonColors[randomNumber];
+    gamePattern.push(randomColor);
+
+    $("#" + randomColor).fadeOut(100).fadeIn(100);
+    // playSound(randomColor);
+}
+
+function animatePress(currentColor) {
+    $("#" + currentColor).addClass("pressed");
+
+    setTimeout(function () {
+        $("#" + currentColor).removeClass("pressed");
+    }, 100);
+}
+
+function checkAnswer(currentLevel) {
+    if(gamePattern[currentLevel - 1] === userClickedPattern[currentLevel - 1])
+    {
+        let flag = true;
+
+        for(let i=0; i<gamePattern.length; i++)
+            if(gamePattern[i] !== userClickedPattern[i]) {
+                flag = false;
+                break;
+            }
+
+        if(flag){
+            console.log("Success");
+            setTimeout(function () {
+                nextSequence();
+            }, 1000);
+        }
+        else{
+            console.log("Wrong");
+        }
+    }
+}
+
+
+
+$(".btn").on("click", function (event) {
+    let userChosenColor = event.target.id;
+    userClickedPattern.push(userChosenColor);
+    playSound(userChosenColor);
+    animatePress(userChosenColor);
+    checkAnswer(gameLevel);
+});
+
+
+let pressed = false;
+
+$("body").keypress(function () {
+    if (!pressed) {
+        nextSequence();
+        pressed = true;
+    }
+
+    checkAnswer();
+});
+
